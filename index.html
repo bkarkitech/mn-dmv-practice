@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minnesota DMV Knowledge Test Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-radius: 12px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .stat-label {
+            font-size: 0.75em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-number.correct { color: #27ae60; }
+        .stat-number.incorrect { color: #e74c3c; }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .mode-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .mode-btn {
+            padding: 12px 24px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .mode-btn:hover, .mode-btn.active {
+            background: white;
+            color: #764ba2;
+        }
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .question-number {
+            font-size: 0.85em;
+            color: #764ba2;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .question-text {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1em;
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .option:hover:not(.disabled) {
+            border-color: #764ba2;
+            background: #f8f4ff;
+            transform: translateX(5px);
+        }
+        .option.selected-correct {
+            border-color: #27ae60;
+            background: #d4edda;
+        }
+        .option.selected-incorrect {
+            border-color: #e74c3c;
+            background: #f8d7da;
+        }
+        .option.show-correct {
+            border-color: #27ae60;
+            background: #d4edda;
+        }
+        .option.disabled {
+            cursor: default;
+        }
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85em;
+            color: #555;
+        }
+        .option.selected-correct .option-letter {
+            background: #27ae60;
+            color: white;
+        }
+        .option.selected-incorrect .option-letter {
+            background: #e74c3c;
+            color: white;
+        }
+        .option.show-correct .option-letter {
+            background: #27ae60;
+            color: white;
+        }
+        .feedback {
+            margin-top: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 15px;
+        }
+        .nav-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .nav-btn.next {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            margin-left: auto;
+        }
+        .nav-btn.next:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .nav-btn.refresh {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .nav-btn.refresh:hover {
+            background: #e0e0e0;
+        }
+        .results-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        .results-card h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .results-card .score {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .results-card .score.pass { color: #27ae60; }
+        .results-card .score.fail { color: #e74c3c; }
+        .results-card .message {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .flashcard {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            cursor: pointer;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            border-radius: 16px;
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background: #d4edda;
+        }
+        .flashcard-front p {
+            font-size: 1.2em;
+            text-align: center;
+            line-height: 1.6;
+            color: #333;
+        }
+        .flashcard-back p {
+            font-size: 1.3em;
+            text-align: center;
+            font-weight: bold;
+            color: #155724;
+        }
+        .flashcard-hint {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 15px;
+        }
+        .card-counter {
+            text-align: center;
+            color: white;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .key-facts {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .key-facts h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+        }
+        .key-facts ul {
+            list-style: none;
+            padding: 0;
+        }
+        .key-facts li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #444;
+            font-size: 0.95em;
+        }
+        .key-facts li:last-child {
+            border-bottom: none;
+        }
+        .key-facts li strong {
+            color: #764ba2;
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header h1 { font-size: 1.4em; }
+            .question-card { padding: 20px; }
+            .stats-bar { padding: 12px 15px; }
+            .stat-number { font-size: 1.2em; }
+            .mode-btn { padding: 10px 18px; font-size: 0.85em; }
+            .nav-btn { padding: 10px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Minnesota DMV Knowledge Test</h1>
+            <p>Practice Quiz - 40 Questions Per Set | Need 32/40 (80%) to Pass</p>
+        </div>
+
+        <div class="mode-buttons">
+            <button class="mode-btn active" onclick="setMode('quiz', this)">Quiz Mode</button>
+            <button class="mode-btn" onclick="setMode('flashcard', this)">Flashcard Mode</button>
+            <button class="mode-btn" onclick="setMode('facts', this)">Key Facts</button>
+        </div>
+
+        <div id="quiz-section">
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-number" id="current-q">1</div>
+                    <div class="stat-label">Question</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="total-q">/ 40</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number correct" id="correct-count">0</div>
+                    <div class="stat-label">Correct</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number incorrect" id="incorrect-count">0</div>
+                    <div class="stat-label">Wrong</div>
+                </div>
+                <div style="width: 100%;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="question-container"></div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn refresh" onclick="newSet()">New Set (Shuffle)</button>
+                <button class="nav-btn next" id="next-btn" onclick="nextQuestion()" style="display:none;">Next Question</button>
+            </div>
+        </div>
+
+        <div id="flashcard-section" style="display:none;">
+            <div class="card-counter" id="card-counter">Card 1 of 40</div>
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="flashcard-front">
+                    <p id="card-question"></p>
+                    <span class="flashcard-hint">Tap to reveal answer</span>
+                </div>
+                <div class="flashcard-back">
+                    <p id="card-answer"></p>
+                </div>
+            </div>
+            <div class="nav-buttons" style="margin-top:20px;">
+                <button class="nav-btn refresh" onclick="newSet()">Shuffle Cards</button>
+                <button class="nav-btn next" onclick="nextCard()">Next Card</button>
+            </div>
+        </div>
+
+        <div id="facts-section" style="display:none;">
+            <div class="key-facts">
+                <h3>Minnesota Speed Limits</h3>
+                <ul>
+                    <li><strong>Alley:</strong> 10 mph</li>
+                    <li><strong>Residential (if adopted):</strong> 25 mph</li>
+                    <li><strong>Urban district:</strong> 30 mph</li>
+                    <li><strong>Interstate (urban 50,000+):</strong> 65 mph</li>
+                    <li><strong>Non-interstate freeway:</strong> 65 mph</li>
+                    <li><strong>Interstate (rural):</strong> 70 mph</li>
+                    <li><strong>100+ mph =</strong> Automatic 6-month license revocation</li>
+                </ul>
+            </div>
+            <div class="key-facts">
+                <h3>DUI/DWI Laws</h3>
+                <ul>
+                    <li><strong>BAC Limit (21+):</strong> 0.08%</li>
+                    <li><strong>BAC Limit (Commercial):</strong> 0.04%</li>
+                    <li><strong>Implied Consent:</strong> Refusing a chemical test is a criminal offense</li>
+                    <li><strong>Open Container:</strong> No open alcohol in vehicle - ever</li>
+                    <li><strong>Body processes:</strong> ~1 drink per hour</li>
+                </ul>
+            </div>
+            <div class="key-facts">
+                <h3>School Bus Rules</h3>
+                <ul>
+                    <li><strong>Undivided road:</strong> ALL traffic from BOTH directions must stop</li>
+                    <li><strong>Divided highway (median/barrier):</strong> Opposite direction may proceed</li>
+                    <li><strong>Stop distance:</strong> At least 20 feet from the bus</li>
+                </ul>
+            </div>
+            <div class="key-facts">
+                <h3>Road Signs by Shape & Color</h3>
+                <ul>
+                    <li><strong>Octagon (8 sides):</strong> Stop</li>
+                    <li><strong>Triangle (inverted):</strong> Yield</li>
+                    <li><strong>Pentagon (5 sides):</strong> School zone</li>
+                    <li><strong>Pennant:</strong> No passing zone</li>
+                    <li><strong>Round:</strong> Railroad crossing ahead</li>
+                    <li><strong>Diamond:</strong> Warning</li>
+                    <li><strong>Orange:</strong> Construction/work zone</li>
+                    <li><strong>Brown:</strong> Recreation/public areas</li>
+                    <li><strong>Green:</strong> Guide/direction signs</li>
+                </ul>
+            </div>
+            <div class="key-facts">
+                <h3>Important Minnesota Rules</h3>
+                <ul>
+                    <li><strong>Move Over Law:</strong> Slow down and move over for stopped emergency vehicles</li>
+                    <li><strong>Zipper Merge:</strong> Stay in lane until merge point, then take turns</li>
+                    <li><strong>Headlights required:</strong> Sunset to sunrise and any time visibility is impaired</li>
+                    <li><strong>Following distance:</strong> Minimum 3 seconds (more in bad conditions)</li>
+                    <li><strong>Ice stopping distance:</strong> Up to 10x longer than dry pavement</li>
+                    <li><strong>Liability insurance:</strong> Required for all vehicles</li>
+                    <li><strong>Cyclists:</strong> Same rights as motor vehicles; give 3 feet clearance</li>
+                    <li><strong>Motorcycles:</strong> Full lane use; illegal to share a lane with them</li>
+                    <li><strong>Stranded in snow:</strong> Stay in the car</li>
+                    <li><strong>Skid on ice:</strong> Ease off gas, steer in direction you want to go</li>
+                </ul>
+            </div>
+            <div class="key-facts">
+                <h3>Traffic Signals</h3>
+                <ul>
+                    <li><strong>Flashing yellow:</strong> Slow down, proceed with caution</li>
+                    <li><strong>Flashing red:</strong> Stop (treat as stop sign)</li>
+                    <li><strong>Solid yellow arrow:</strong> Protected turn is ending</li>
+                    <li><strong>Red arrow:</strong> Stop; no turn in that direction</li>
+                    <li><strong>Green arrow to solid green:</strong> May still turn but must yield</li>
+                    <li><strong>Power outage:</strong> Treat as four-way stop</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var allQuestions = [
+        {q: "Certain highway signs contain information about hazardous conditions. Such signs are known as:", o: ["Regulatory signs", "Warning signs", "Information signs", "Guide signs"], a: 1},
+        {q: "Signs that are colored orange are:", o: ["Regulatory signs", "Warning signs", "Work zone (construction) signs", "Guide signs"], a: 2},
+        {q: "Pentagonal (five-sided) signs indicate:", o: ["Railroad crossings", "No passing zones", "School zones", "Speed limits"], a: 2},
+        {q: "Pennant-shaped signs indicate:", o: ["School zones", "No passing zones", "Speed limits", "Railroad crossings"], a: 1},
+        {q: "A triangular road sign means:", o: ["Stop", "No passing", "Slow down and yield the right-of-way", "Construction zone ahead"], a: 2},
+        {q: "Signs indicating areas of public recreation are:", o: ["Orange", "Red", "Green", "Brown"], a: 3},
+        {q: "A round road sign indicates:", o: ["A school zone ahead", "A railroad crossing ahead", "A construction zone ahead", "A hospital ahead"], a: 1},
+        {q: "What does a flashing yellow traffic signal mean?", o: ["Stop and proceed when safe", "Speed up to clear the intersection", "Slow down and proceed with caution", "Stop and wait for a green light"], a: 2},
+        {q: "A flashing red traffic signal means:", o: ["Slow down and proceed with caution", "Stop before entering the intersection (treat as stop sign)", "Drive through if no crossing traffic", "Yield to traffic on the right only"], a: 1},
+        {q: "What does a solid yellow arrow on a traffic signal mean?", o: ["Speed up before the light changes", "Prepare to stop; the protected turn is ending", "You may still turn left", "Stop immediately"], a: 1},
+        {q: "A green arrow on a traffic signal means:", o: ["You may proceed straight only", "You may proceed but must yield to all traffic", "You may turn in the direction the arrow is pointing", "The signal is about to change"], a: 2},
+        {q: "When a traffic signal light turns green, you should:", o: ["Accelerate as quickly as possible", "Yield the right-of-way to pedestrians", "Not move until another driver waves you on", "Back up slowly"], a: 1},
+        {q: "A red arrow on a traffic signal means:", o: ["Yield to oncoming traffic before turning", "Turn with caution", "Stop; you may not turn in that direction until the arrow changes", "Speed up and complete your turn"], a: 2},
+        {q: "When traffic signals are not functioning (power outage), you should:", o: ["Proceed through without stopping", "Treat the intersection as a four-way stop", "Yield only to traffic on your right", "Turn around and find another route"], a: 1},
+        {q: "Highway markings:", o: ["Are usually not important", "Are only found in construction zones", "Provide information for drivers", "Are usually red and blue in color"], a: 2},
+        {q: "A double solid yellow centerline means:", o: ["Passing is allowed with caution", "You are on a one-way road", "Passing is not allowed from either direction", "The road is about to narrow"], a: 2},
+        {q: "A solid white line between lanes means:", o: ["Traffic moves in opposite directions", "Passing is allowed", "You should stay in your lane (lane change discouraged)", "The road is one-way"], a: 2},
+        {q: "What do lane use control signals with a green arrow indicate?", o: ["The signal is about to change to a red X", "Drivers should not drive in this lane", "Drivers may use this lane only to make a left turn", "Drivers may drive normally in this lane"], a: 3},
+        {q: "When two vehicles arrive at an uncontrolled intersection at the same time, who has the right-of-way?", o: ["The vehicle on the left", "The vehicle on the right", "The faster vehicle", "The larger vehicle"], a: 1},
+        {q: "A driver entering public traffic from a driveway or private road:", o: ["Has the right-of-way", "Should yield to drivers already on the public road", "May force their way into traffic", "Can assume other drivers will change lanes"], a: 1},
+        {q: "What does a yield sign require you to do?", o: ["Always come to a complete stop", "Speed up to merge quickly", "Slow down and yield the right-of-way to traffic and pedestrians", "Yield only to traffic on the left"], a: 2},
+        {q: "When you hear the siren or see the flashing lights of an approaching emergency vehicle, you must:", o: ["Speed up to get out of the way", "Stop immediately regardless of location", "Drive to the right side of the road and stop", "Flash your headlights"], a: 2},
+        {q: "You must yield for emergency vehicles:", o: ["Under no circumstances", "When you see a flashing red or blue light or hear a siren", "Only when other vehicles yield", "Only on highways"], a: 1},
+        {q: "At a four-way stop, if two vehicles arrive at the same time:", o: ["The vehicle turning left goes first", "The vehicle going straight goes first", "The vehicle on the right goes first", "Either vehicle may proceed"], a: 2},
+        {q: "When making a left turn at an intersection, you must yield to:", o: ["Oncoming traffic and pedestrians", "Only vehicles turning right", "No one if you have a green light", "Only pedestrians"], a: 0},
+        {q: "A pedestrian using a white cane or guide dog:", o: ["Must yield to all vehicle traffic", "Must always be given the right-of-way", "Should only cross at intersections with signals", "Has no special rights"], a: 1},
+        {q: "What is the speed limit in a Minnesota urban district (town)?", o: ["25 mph", "30 mph", "35 mph", "45 mph"], a: 1},
+        {q: "What is the speed limit on Minnesota interstate highways outside urbanized areas of 50,000+?", o: ["55 mph", "60 mph", "65 mph", "70 mph"], a: 3},
+        {q: "What is the speed limit on Minnesota interstate highways inside urbanized areas of 50,000+?", o: ["55 mph", "60 mph", "65 mph", "70 mph"], a: 2},
+        {q: "What is the speed limit in a Minnesota alley?", o: ["5 mph", "10 mph", "15 mph", "20 mph"], a: 1},
+        {q: "In Minnesota, the speed limit on non-interstate expressways and freeways is:", o: ["55 mph", "60 mph", "65 mph", "70 mph"], a: 2},
+        {q: "In Minnesota, exceeding what speed results in automatic license revocation for six months?", o: ["80 mph", "90 mph", "100 mph", "110 mph"], a: 2},
+        {q: "When is it illegal to drive below the speed limit?", o: ["Only when driving in rural areas", "When driving slowly disrupts the normal flow of traffic", "When in heavy traffic in a construction zone", "When driving under adverse weather conditions"], a: 1},
+        {q: "The posted speed limit shows:", o: ["The minimum speed allowed on that road", "The fastest speed you may drive under ideal conditions", "A suggested speed for all conditions", "The speed at which you will receive a ticket"], a: 1},
+        {q: "Even 10 mph can be too fast when:", o: ["Driving on a highway", "Conditions are hazardous (ice, fog, heavy traffic)", "Driving during the day", "There are no other vehicles nearby"], a: 1},
+        {q: "When parallel parking between two cars, you should first:", o: ["Turn your wheels to the left", "Turn your wheels to the right", "Pull up even with the car in front of your desired space", "Back slowly into the space"], a: 2},
+        {q: "If you leave your vehicle unattended, you must:", o: ["Turn off the engine only", "Lock the ignition and remove the key only", "Set the parking brake only", "All of the above (turn off engine, lock ignition/remove key, set parking brake)"], a: 3},
+        {q: "Using only parking lights when driving at night is:", o: ["Acceptable in well-lit areas", "Recommended in fog", "Unlawful", "Required in residential areas"], a: 2},
+        {q: "A 'No stopping' sign means that, unless directed by a police officer, you may stop only:", o: ["Long enough to unload packages", "To discharge passengers", "For up to 5 minutes", "To obey a traffic signal, avoid conflict with traffic, or comply with a police officer"], a: 3},
+        {q: "When parking uphill with a curb, you should turn your wheels:", o: ["To the left (away from the curb)", "To the right (toward the curb)", "Keep them straight", "It doesn't matter"], a: 0},
+        {q: "When parking downhill with a curb, you should turn your wheels:", o: ["To the left (away from the curb)", "To the right (toward the curb)", "Keep them straight", "It doesn't matter"], a: 1},
+        {q: "In Minnesota, the legal blood alcohol concentration (BAC) limit for drivers 21 and over is:", o: ["0.05%", "0.08%", "0.10%", "0.02%"], a: 1},
+        {q: "In Minnesota, the legal BAC limit for commercial motor vehicle drivers is:", o: ["0.02%", "0.04%", "0.08%", "0.10%"], a: 1},
+        {q: "Minnesota's implied consent law means:", o: ["You may refuse a chemical test at any time without consequence", "By driving in Minnesota, you consent to chemical testing of your blood, breath, or urine", "You must consent to a vehicle search", "You agree to pull over for any police officer"], a: 1},
+        {q: "In Minnesota, refusing to submit to a chemical test (breath, blood, or urine) when lawfully requested is:", o: ["Your constitutional right with no penalty", "A minor traffic violation", "A criminal offense", "Only a civil matter"], a: 2},
+        {q: "The body can process approximately how much alcohol per hour?", o: ["Three drinks per hour", "Two drinks per hour", "One drink per hour", "Half a drink per hour"], a: 2},
+        {q: "Drinking alcohol and driving is:", o: ["A minor traffic safety problem", "A serious traffic safety problem", "Safe if you have only had a few drinks", "Only dangerous to the driver who drinks"], a: 1},
+        {q: "Alcohol affects a driver by:", o: ["Reducing concentration and judgment", "Causing poor coordination", "Slowing reaction time", "All of the above"], a: 3},
+        {q: "The effect that alcohol has on your reflexes and judgment:", o: ["Is less pronounced with beer vs. wine", "Is less pronounced with wine vs. beer", "Is most pronounced with hard liquor", "Depends on the amount of alcohol in your bloodstream"], a: 3},
+        {q: "Blood alcohol content (BAC) depends on all of the following EXCEPT:", o: ["Your body weight", "How much you have eaten", "How physically fit you are", "The amount of alcohol consumed"], a: 2},
+        {q: "Combining alcohol with drugs (medication):", o: ["Has no effect on driving ability", "May enhance the effects of both substances", "Makes driving safer because they cancel each other out", "Is only dangerous if the drugs are illegal"], a: 1},
+        {q: "Even a small amount of alcohol can:", o: ["Improve your driving", "Have no effect if you eat first", "Limit your concentration, perception, judgment, and memory", "Only affect inexperienced drivers"], a: 2},
+        {q: "You may avoid the risks of alcohol-related crashes by:", o: ["Deciding before you start drinking that you are not going to drive", "Simply saying 'No thanks, I'm driving' if offered a drink", "Calling a taxi", "Doing any of the above"], a: 3},
+        {q: "If you become stranded in a snowstorm, the best thing to do is:", o: ["Get out of the car and go for help", "Lay down in your car and go to sleep", "Walk into the road to get attention", "Stay in the car; you are most likely to be found there"], a: 3},
+        {q: "When driving on icy or snowy roads, you should:", o: ["Increase your speed to get home faster", "Reduce speed and increase following distance", "Drive at the posted speed limit", "Use cruise control"], a: 1},
+        {q: "Your stopping distance on ice can be:", o: ["The same as on dry pavement", "About twice as long as on dry pavement", "3-4 times longer than on dry pavement", "Up to 10 times longer than on dry pavement"], a: 3},
+        {q: "If your vehicle begins to skid on ice, you should:", o: ["Slam on the brakes", "Turn the wheel in the opposite direction of the skid", "Ease off the gas and steer in the direction you want to go", "Accelerate to regain traction"], a: 2},
+        {q: "When driving in fog, you should:", o: ["Use high beam headlights", "Use low beam headlights or fog lights", "Turn off all lights", "Use only parking lights"], a: 1},
+        {q: "If driving in fog, using high beam headlights will:", o: ["Increase your visibility significantly", "Reflect off the fog and reduce your visibility", "Help oncoming drivers see you better", "Have no effect"], a: 1},
+        {q: "The best way to avoid loss of control under wet conditions is to:", o: ["Increase your vehicle's speed", "Increase your following distance and reduce speed", "Drive in the tire tracks of the vehicle ahead", "Apply your brakes frequently"], a: 1},
+        {q: "Hydroplaning is more likely to occur when:", o: ["You drive slowly on wet roads", "Your tires have good tread", "You drive fast on wet roads with worn tires", "You drive on dry roads"], a: 2},
+        {q: "The risk of hydroplaning can be reduced by:", o: ["Not speeding when roads are wet", "Using proper tire pressure", "Replacing tires with poor tread", "All of the above"], a: 3},
+        {q: "On a slippery road, if you need to stop, you should:", o: ["Firmly apply the brakes", "Take your foot off the gas pedal and steer straight", "Apply the parking brake", "Pump the brakes rapidly"], a: 1},
+        {q: "Worn or bald tires:", o: ["Can make turning more difficult", "Are likely to hydroplane", "Can increase your stopping distance", "All of the above"], a: 3},
+        {q: "When a school bus has its red lights flashing and stop arm extended:", o: ["You may pass if no children are visible", "You must stop regardless of which direction you are approaching from", "You may pass if you are on the opposite side of a divided highway", "Both B and C"], a: 3},
+        {q: "Drivers may pass a stopped school bus with flashing red lights on a divided highway (with a median or barrier) if:", o: ["They are traveling in the opposite direction", "Never; you must always stop", "Only if a police officer directs them to", "Only in rural areas"], a: 0},
+        {q: "The speed limit in a school zone when children are present is typically:", o: ["10 mph", "15-20 mph (reduced from posted limit)", "The regular posted speed limit", "5 mph"], a: 1},
+        {q: "When driving near a school, you should:", o: ["Maintain regular highway speed", "Watch for children and be prepared to stop", "Only slow down during school hours", "Honk your horn to alert children"], a: 1},
+        {q: "When approaching a railroad crossing, you should:", o: ["Speed up to cross quickly", "Slow down, look both ways, and be ready to stop", "Stop only if you see a train", "Rely solely on warning signals"], a: 1},
+        {q: "You must stop at a railroad crossing when:", o: ["A stop sign is posted", "A crossing gate is lowered", "The crossing lights are flashing", "All of the above"], a: 3},
+        {q: "You may drive around lowered railroad crossing gates:", o: ["When the train has passed", "Under no circumstances", "When the lights have stopped flashing", "When other drivers do"], a: 1},
+        {q: "It is safe to stop on railroad tracks for a short period if moving with traffic:", o: ["True", "False - never stop on railroad tracks", "Only if you can see no train coming", "Only during daylight hours"], a: 1},
+        {q: "When crossing railroad tracks that have no signals or gates, you should:", o: ["Assume you have the right-of-way", "Speed up to cross quickly", "Make sure there is space on the other side for your vehicle to cross completely", "Only look to the left for trains"], a: 2},
+        {q: "A round yellow sign with an X and 'RR' on it indicates:", o: ["A rest area ahead", "A railroad crossing ahead", "A road closure", "A recreation area"], a: 1},
+        {q: "When stopped at a railroad crossing with multiple tracks, you should:", o: ["Proceed immediately after the first train passes", "Wait until you have a clear view of all tracks before proceeding", "Only look in the direction the first train came from", "Honk your horn before crossing"], a: 1},
+        {q: "When turning or changing lanes, you must:", o: ["Signal only if there is visible traffic", "Signal only when driving at night", "Always signal your intentions, even when no visible traffic is present", "Signal only when driving in heavy traffic"], a: 2},
+        {q: "When getting ready to change lanes, you should:", o: ["Check your side view mirror", "Check your rearview mirror", "Quickly turn your head to check for blind spots", "All of the above"], a: 3},
+        {q: "When changing lanes, you can check your blind spots by:", o: ["Using the inside rearview mirror", "Using the outside rearview mirror", "Using both rearview mirrors", "Turning your head and looking over your shoulder"], a: 3},
+        {q: "You cannot pass safely on a two-lane, two-way road unless:", o: ["You can clearly see the road ahead is clear", "You can return to your lane safely before oncoming traffic arrives", "Your vehicle is capable of passing speed", "All of the above"], a: 3},
+        {q: "To pass a slower-moving vehicle on a two-lane road, you must:", o: ["Not cross the centerline", "Flash your lights at oncoming traffic", "Use the shoulder", "Use the lane that belongs to oncoming traffic"], a: 3},
+        {q: "If you are driving on the interstate and pass your exit, you should:", o: ["Quickly cut across traffic to make your turn", "Make a U-turn to go back to the exit", "Continue driving and use the next exit", "Put your vehicle in reverse"], a: 2},
+        {q: "A solid yellow centerline on your side of the road means:", o: ["Passing is allowed when safe", "Do not pass", "Pass with caution", "You are in a turn lane"], a: 1},
+        {q: "It is unlawful for a car to try to share a lane with a motorcycle:", o: ["True", "False", "Only on highways", "Only in urban areas"], a: 0},
+        {q: "When the driver behind you wants to pass, you should:", o: ["Speed up", "Maintain your current speed", "Slow down to allow them room for passing safely", "Change lanes immediately"], a: 2},
+        {q: "You should signal before passing:", o: ["Just before changing lanes", "At any time", "After changing lanes", "Early enough for other drivers to know your plans"], a: 3},
+        {q: "Increase your following distance when:", o: ["Driving behind a large vehicle that blocks your vision", "Following a motorcycle", "Driving on wet or icy roads", "All of the above"], a: 3},
+        {q: "A driver does not need to allow as much distance when following a motorcycle as when following a car:", o: ["True", "False (you should allow MORE distance)", "Depends on the speed", "Only in good weather"], a: 1},
+        {q: "The minimum safe following distance in ideal conditions is:", o: ["One car length", "Two seconds", "Three seconds", "Five seconds"], a: 2},
+        {q: "In poor weather conditions, you should increase your following distance to:", o: ["3 seconds", "4-5 seconds", "6 or more seconds", "2 seconds"], a: 2},
+        {q: "To safely drive at night, you should:", o: ["Increase your following distance", "Not drive if you are tired", "Make sure your headlights are working properly", "All of the above"], a: 3},
+        {q: "When approaching a steady yellow traffic light, you should:", o: ["Speed up to clear the intersection", "Slow down and prepare to stop", "Stop immediately", "Honk your horn and proceed"], a: 1},
+        {q: "Drivers involved in a serious motor vehicle crash should:", o: ["Leave the scene quickly", "Move all vehicles immediately", "Stop, call police, and determine if anyone is injured", "Wait for witnesses before doing anything"], a: 2},
+        {q: "If you feel tired while driving, you should:", o: ["Get some coffee", "Open your window", "Stop driving and rest", "Turn on the radio"], a: 2},
+        {q: "Stress can affect your driving by:", o: ["Lowering your ability to focus on driving", "Making you more aware of others", "Decreasing your chances of an accident", "Improving your reaction time"], a: 0},
+        {q: "All occupants of a vehicle should wear seat belts:", o: ["Only on highways", "Only in the front seat", "Every time the car is driven", "Only when driving over 35 mph"], a: 2},
+        {q: "A seat belt should be:", o: ["Loose and comfortable", "Buckled snugly across your hip bones and lower abdomen", "Worn only on long trips", "Placed behind your back if uncomfortable"], a: 1},
+        {q: "Driving ability can be impaired by:", o: ["Alcohol", "Medication", "Lack of sleep", "All of the above"], a: 3},
+        {q: "Every motor vehicle in Minnesota is required to be covered by:", o: ["Collision insurance only", "Liability insurance", "Comprehensive insurance only", "No insurance is required"], a: 1},
+        {q: "Children in vehicles:", o: ["May stand if they are in the backseat", "Must never be allowed to ride while standing in the vehicle", "May stand if the vehicle is going slowly", "Only need to be seated in the front"], a: 1},
+        {q: "Eating and drinking while driving can cause drivers to:", o: ["Make no driving errors", "Be better drivers because they are not hungry", "Drive more slowly and carefully", "Have trouble controlling their vehicles"], a: 3},
+        {q: "In Minnesota, when approaching a stopped emergency vehicle with flashing lights, you must:", o: ["Speed up to pass quickly", "Slow down and move over to an adjacent lane when possible", "Stop completely", "Flash your headlights"], a: 1},
+        {q: "In Minnesota, drinking open alcohol in a vehicle is:", o: ["Allowed for passengers only", "Allowed in the back seat", "Under no circumstances allowed", "Allowed if the driver is not drinking"], a: 2},
+        {q: "In Minnesota, motorcycles are entitled to:", o: ["Share a lane with cars", "Full use of a traffic lane (same as a car)", "Only the right side of a lane", "Use the shoulder during traffic"], a: 1},
+        {q: "In Minnesota, bicyclists on the road:", o: ["Don't have to follow traffic laws", "Are considered vehicles with the same rights and responsibilities as motor vehicles", "Must always ride on the sidewalk", "Cannot be ticketed for violations"], a: 1},
+        {q: "In Minnesota, you must use headlights:", o: ["Only at night", "Only in rain", "From sunset to sunrise and any time visibility is impaired", "Only on highways"], a: 2},
+        {q: "When approaching a school bus on an undivided road with flashing red lights, drivers from BOTH directions must:", o: ["Slow down to 20 mph", "Stop at least 20 feet from the bus", "Proceed with caution", "Only stop if children are visible"], a: 1},
+        {q: "In Minnesota, what is the 'zipper merge' method?", o: ["Merging as early as possible", "Staying in your lane until the merge point, then taking turns", "Forcing your way into another lane", "Stopping at the merge point"], a: 1},
+        {q: "In Minnesota, blue and red flashing lights on a vehicle indicate:", o: ["A volunteer firefighter or authorized emergency vehicle", "A school bus", "A construction vehicle", "A tow truck"], a: 0},
+        {q: "What should you do if your accelerator sticks while driving?", o: ["Reach down and pull it up", "Shift to park", "Shift to neutral and apply steady pressure on the brake", "Turn the engine off immediately"], a: 2},
+        {q: "In Minnesota, when your wheels slip off the edge of the road, you should:", o: ["Jerk the steering wheel to force the vehicle back on the pavement", "Speed up and steer back onto the pavement", "Slam on your brakes", "Slow down gently using brakes and turn the steering wheel back at a safe speed"], a: 3},
+        {q: "When entering a freeway, you should:", o: ["Stop at the end of the entrance ramp and wait", "Signal, yield to existing traffic, and enter at freeway speed", "Drive slowly to check traffic", "Always come to a complete stop first"], a: 1},
+        {q: "Your horn should be used:", o: ["When traveling through any intersection", "When passing a bicyclist", "When a child is about to run into the street", "When parallel parking"], a: 2},
+        {q: "In Minnesota, when must you use your turn signal?", o: ["Only when other cars are visible", "When changing lanes, turning, or pulling from a curb", "Only at intersections", "Only on highways"], a: 1},
+        {q: "You are required to signal every time you pull away from a curb:", o: ["True", "False", "Only in heavy traffic", "Only on busy streets"], a: 0},
+        {q: "At night, if you must stop alongside the road, you should:", o: ["Turn off all lights to conserve battery", "Turn on your emergency flashers and leave low beams on", "Leave only parking lights on", "Flash your high beams"], a: 1},
+        {q: "Regulatory signs are:", o: ["Yellow diamond-shaped signs", "Signs requiring drivers to obey the indicated instructions", "Green rectangular signs", "Orange signs in work zones"], a: 1},
+        {q: "Motorists should maintain a safe operating distance when driving near a cyclist:", o: ["True - at least 3 feet of clearance is required", "False - cyclists should move out of the way", "Only on highways", "Only in school zones"], a: 0},
+        {q: "A vehicle defect that may affect safe operation should be:", o: ["Corrected when you can afford it", "Corrected as soon as possible", "Ignored if the car still runs", "Only fixed before your next inspection"], a: 1},
+        {q: "If you come to an intersection that is blocked by other traffic, you should:", o: ["Go slowly until the traffic ahead moves", "Get as close as possible to the car in front", "Stay out of the intersection until you can pass through", "Sound your horn to make cars move"], a: 2},
+        {q: "In Minnesota, the speed limit in a residential district that has adopted the lower limit is:", o: ["20 mph", "25 mph", "30 mph", "35 mph"], a: 1},
+        {q: "When driving on gravel or dirt roads, you should:", o: ["Slow down", "Increase your speed", "Come to a complete stop", "Maintain highway speed"], a: 0},
+        {q: "Night driving can be more difficult because:", o: ["Cars overheat more quickly at night", "Visibility is reduced in the dark", "It is more likely to be raining at night", "You encounter more motorcycles at night"], a: 1},
+        {q: "Drugs that can affect driving ability include:", o: ["Allergy medicine", "Marijuana", "Cold remedies", "All of these"], a: 3},
+        {q: "On long trips, you can prevent drowsiness by:", o: ["Turning up the radio", "Opening the window", "Stopping at regular intervals for rest", "Drinking caffeinated beverages"], a: 2},
+        {q: "When approaching an animal on the roadway, you should:", o: ["Honk your horn loudly", "Speed up to pass quickly", "Be very cautious and slow down", "Flash your high beams"], a: 2},
+        {q: "A green arrow traffic signal that changes to a solid green light means:", o: ["You may still turn, but must yield to oncoming traffic", "You may no longer turn", "You still have the right-of-way to turn", "You must stop"], a: 0},
+        {q: "Proper conduct during a traffic stop includes:", o: ["Getting out of the car to meet the officer", "Reaching under your seat for your registration", "Staying in your vehicle with hands on the steering wheel until the officer approaches", "Opening your door to speak with the officer"], a: 2},
+        {q: "What should you do if you are involved in an accident and another person is injured?", o: ["Move the injured away from the scene immediately", "Always leave the injured where they are", "Do not move the injured unnecessarily; keep them warm and administer first aid", "Leave the scene to call for help"], a: 2},
+        {q: "A space cushion around your vehicle is important because it:", o: ["Makes your car look bigger", "Provides time to react to hazards", "Is required by law", "Helps with fuel efficiency"], a: 1},
+        {q: "The 'No Zone' refers to:", o: ["School zones where parking is prohibited", "Blind spots around large trucks where your vehicle may not be visible", "Construction zones", "Areas where U-turns are prohibited"], a: 1}
+    ];
+
+    var currentSet = [];
+    var currentIndex = 0;
+    var correctCount = 0;
+    var incorrectCount = 0;
+    var answered = false;
+    var currentMode = 'quiz';
+    var cardFlipped = false;
+
+    function shuffle(array) {
+        var arr = array.slice();
+        for (var i = arr.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+        return arr;
+    }
+
+    function newSet() {
+        currentSet = shuffle(allQuestions).slice(0, 40);
+        currentIndex = 0;
+        correctCount = 0;
+        incorrectCount = 0;
+        answered = false;
+        cardFlipped = false;
+
+        if (currentMode === 'quiz') {
+            renderQuestion();
+            updateStats();
+        } else if (currentMode === 'flashcard') {
+            renderFlashcard();
+        }
+    }
+
+    function setMode(mode, btn) {
+        currentMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(function(b) { b.classList.remove('active'); });
+        if (btn) { btn.classList.add('active'); }
+
+        document.getElementById('quiz-section').style.display = mode === 'quiz' ? 'block' : 'none';
+        document.getElementById('flashcard-section').style.display = mode === 'flashcard' ? 'block' : 'none';
+        document.getElementById('facts-section').style.display = mode === 'facts' ? 'block' : 'none';
+
+        if (mode === 'quiz' || mode === 'flashcard') {
+            newSet();
+        }
+    }
+
+    function renderQuestion() {
+        if (currentIndex >= 40) {
+            showResults();
+            return;
+        }
+
+        var q = currentSet[currentIndex];
+        var container = document.getElementById('question-container');
+        var letters = ['A', 'B', 'C', 'D'];
+
+        var html = '<div class="question-card">' +
+            '<div class="question-number">Question ' + (currentIndex + 1) + ' of 40</div>' +
+            '<div class="question-text">' + q.q + '</div>' +
+            '<div class="options">';
+
+        for (var i = 0; i < q.o.length; i++) {
+            html += '<div class="option" id="option-' + i + '" onclick="selectAnswer(' + i + ')">' +
+                '<span class="option-letter">' + letters[i] + '</span>' +
+                '<span>' + q.o[i] + '</span>' +
+                '</div>';
+        }
+
+        html += '</div>' +
+            '<div class="feedback" id="feedback"></div>' +
+            '</div>';
+
+        container.innerHTML = html;
+        document.getElementById('next-btn').style.display = 'none';
+        answered = false;
+    }
+
+    function selectAnswer(idx) {
+        if (answered) return;
+        answered = true;
+
+        var q = currentSet[currentIndex];
+        var correct = q.a;
+        var feedback = document.getElementById('feedback');
+
+        var options = document.querySelectorAll('.option');
+        for (var i = 0; i < options.length; i++) { options[i].classList.add('disabled'); }
+
+        if (idx === correct) {
+            correctCount++;
+            document.getElementById('option-' + idx).classList.add('selected-correct');
+            feedback.className = 'feedback correct';
+            feedback.textContent = 'Correct! Great job!';
+        } else {
+            incorrectCount++;
+            document.getElementById('option-' + idx).classList.add('selected-incorrect');
+            document.getElementById('option-' + correct).classList.add('show-correct');
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = 'Incorrect. The correct answer is: ' + q.o[correct];
+        }
+
+        updateStats();
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex >= 40) {
+            showResults();
+        } else {
+            renderQuestion();
+            updateStats();
+        }
+    }
+
+    function updateStats() {
+        document.getElementById('current-q').textContent = Math.min(currentIndex + 1, 40);
+        document.getElementById('correct-count').textContent = correctCount;
+        document.getElementById('incorrect-count').textContent = incorrectCount;
+        const progress = ((currentIndex) / 40) * 100;
+        document.getElementById('progress-fill').style.width = progress + '%';
+    }
+
+    function showResults() {
+        var container = document.getElementById('question-container');
+        var percentage = Math.round((correctCount / 40) * 100);
+        var passed = correctCount >= 32;
+
+        container.innerHTML = '<div class="results-card">' +
+            '<h2>' + (passed ? 'Congratulations!' : 'Keep Practicing!') + '</h2>' +
+            '<div class="score ' + (passed ? 'pass' : 'fail') + '">' + correctCount + '/40</div>' +
+            '<div class="message">' +
+            'You got ' + percentage + '% correct.<br>' +
+            (passed ? 'You passed! (Need 80% / 32 correct)' : 'You need 32 correct (80%) to pass. You were ' + (32 - correctCount) + ' away.') +
+            '</div>' +
+            '<button class="nav-btn next" onclick="newSet()" style="display:inline-block; margin:0 auto;">' +
+            'Try New Set</button>' +
+            '</div>';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    // Flashcard functions
+    function renderFlashcard() {
+        if (currentIndex >= 40) {
+            currentIndex = 0;
+            currentSet = shuffle(allQuestions).slice(0, 40);
+        }
+
+        var q = currentSet[currentIndex];
+        document.getElementById('card-question').textContent = q.q;
+        document.getElementById('card-answer').textContent = q.o[q.a];
+        document.getElementById('card-counter').textContent = 'Card ' + (currentIndex + 1) + ' of 40';
+        document.getElementById('flashcard').classList.remove('flipped');
+        cardFlipped = false;
+    }
+
+    function flipCard() {
+        var card = document.getElementById('flashcard');
+        card.classList.toggle('flipped');
+        cardFlipped = !cardFlipped;
+    }
+
+    function nextCard() {
+        currentIndex++;
+        if (currentIndex >= 40) {
+            currentIndex = 0;
+            currentSet = shuffle(allQuestions).slice(0, 40);
+        }
+        renderFlashcard();
+    }
+
+    // Initialize when page is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() { newSet(); });
+    } else {
+        newSet();
+    }
+    </script>
+</body>
+</html>
