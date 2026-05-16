@@ -669,7 +669,139 @@
         {q: "What does this yellow diamond sign with a divided highway symbol indicate?", o: ["Merge ahead", "Divided highway begins ahead", "Two-way traffic", "Lane ends"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/MUTCD_W6-1.svg" alt="Road sign">'},
         {q: "What does this yellow diamond sign with a skidding car indicate?", o: ["Car wash ahead", "Slippery when wet - reduce speed", "Ice on road - stop", "Winding road ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/MUTCD_W8-5.svg" alt="Road sign">'},
         {q: "What does this yellow diamond sign with a small stop sign symbol indicate?", o: ["Stop sign ahead - prepare to stop", "Stop sign removed", "Intersection ahead", "Traffic signal ahead"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/MUTCD_W3-1.svg" alt="Road sign">'},
-        {q: "What does this shield-shaped sign indicate?", o: ["Military zone", "Interstate highway route marker", "National park", "Hospital direction"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/I-blank.svg" alt="Road sign">'}
+        {q: "What does this shield-shaped sign indicate?", o: ["Military zone", "Interstate highway route marker", "National park", "Hospital direction"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/I-blank.svg" alt="Road sign">'},
+
+        // Warning signs - Hill/Grade
+        {q: "What does this sign mean?", o: ["Steep hill ahead - check brakes", "Mountain area ahead", "Truck route", "Elevation change - speed up"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/9/9d/MUTCD_W7-1.svg" alt="Road sign">'},
+        // Warning signs - Two-way traffic
+        {q: "What does this sign mean?", o: ["Divided highway ahead", "Two-way traffic ahead", "Merge ahead", "Road narrows"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/MUTCD_W6-3.svg" alt="Road sign">'},
+        // Warning signs - Narrow bridge
+        {q: "What does this sign mean?", o: ["Bridge out ahead", "Narrow bridge ahead", "Weight limit on bridge", "One-lane bridge ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/MUTCD_W5-2.svg" alt="Road sign">'},
+        // Warning signs - Low clearance
+        {q: "What does this sign mean?", o: ["Speed limit ahead", "Low clearance ahead", "Weight limit", "Height restriction for parking"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/4/49/MUTCD_W12-2.svg" alt="Road sign">'},
+        // Warning signs - Sharp turn
+        {q: "What does this sign mean?", o: ["Road curves slightly", "Sharp turn ahead - slow down", "Detour ahead", "Roundabout ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/MUTCD_W1-1R.svg" alt="Road sign">'},
+        // Warning signs - Winding road
+        {q: "What does this sign mean?", o: ["Winding road ahead", "Slippery road", "Detour route", "S-curve construction zone"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/1/11/MUTCD_W1-5R.svg" alt="Road sign">'},
+        // Warning signs - Traffic signal ahead
+        {q: "What does this sign mean?", o: ["Traffic signal ahead - prepare to stop", "No traffic signal", "Intersection with flashing light", "Signal under repair"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/MUTCD_W3-3.svg" alt="Road sign">'},
+        // Warning signs - Yield ahead
+        {q: "What does this sign mean?", o: ["Yield sign ahead - prepare to yield", "Merge ahead", "Stop sign ahead", "Intersection ahead"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/MUTCD_W3-2.svg" alt="Road sign">'},
+        // Warning signs - Cross road
+        {q: "What does this sign mean?", o: ["Railroad crossing ahead", "Crossroad/intersection ahead", "Hospital ahead", "Airport ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/7/72/MUTCD_W2-1.svg" alt="Road sign">'},
+        // Warning signs - Side road
+        {q: "What does this sign mean?", o: ["T-intersection ahead", "Side road entering from the right", "Dead end ahead", "Merge from left"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/MUTCD_W2-2.svg" alt="Road sign">'},
+        // Warning signs - T-intersection
+        {q: "What does this sign mean?", o: ["Road ends - must turn left or right", "Side road ahead", "Crossroad ahead", "Detour ahead"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/1/10/MUTCD_W2-4.svg" alt="Road sign">'},
+        // Warning signs - Road narrows
+        {q: "What does this sign mean?", o: ["Bridge ahead", "Road narrows ahead", "Divided highway ahead", "Lane ends merge left"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/3/35/MUTCD_W5-1.svg" alt="Road sign">'},
+        // Warning signs - Advisory speed (curve)
+        {q: "What does this yellow sign with a number on it indicate?", o: ["Speed limit in this zone", "Advisory speed for upcoming curve", "Minimum speed required", "Distance to next exit"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/3/30/MUTCD_W13-1P.svg" alt="Road sign">'},
+        // Warning signs - Truck crossing
+        {q: "What does this sign mean?", o: ["Truck stop ahead", "Truck crossing or entering highway ahead", "No trucks allowed", "Truck weight station ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/MUTCD_W11-10.svg" alt="Road sign">'},
+        // Warning signs - Bicycle crossing
+        {q: "What does this sign mean?", o: ["Bike parking ahead", "Bicycle crossing ahead - watch for cyclists", "No bicycles allowed", "Bike shop ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/3/33/MUTCD_W11-1.svg" alt="Road sign">'},
+        // Warning signs - Horse/Farm equipment
+        {q: "What does this sign mean?", o: ["Farm area - no trespassing", "Farm machinery/slow vehicles may be on road", "Horse trail crossing", "Agricultural zone speed limit"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/MUTCD_W11-5.svg" alt="Road sign">'},
+        // Warning signs - Double curve
+        {q: "What does this sign mean?", o: ["S-curve/double curve ahead", "Winding road for next 5 miles", "Road under construction", "Detour route"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/4/40/MUTCD_W1-4R.svg" alt="Road sign">'},
+        // Warning signs - Lane ends
+        {q: "What does this sign mean?", o: ["Road narrows ahead", "Right lane ends - merge left", "Divided highway begins", "Exit only"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/MUTCD_W4-2R.svg" alt="Road sign">'},
+        // Warning signs - Dip
+        {q: "What does this sign mean?", o: ["Dip in road ahead", "Hill ahead", "Bump ahead", "Flood area ahead"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/MUTCD_W8-2.svg" alt="Road sign">'},
+        // Warning signs - Bump
+        {q: "What does this sign mean?", o: ["Speed bump ahead", "Bump in road ahead", "Hill ahead", "Uneven road surface"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/MUTCD_W8-1.svg" alt="Road sign">'},
+        // Warning signs - Pavement ends
+        {q: "What does this sign mean?", o: ["Road closed ahead", "Pavement ends ahead - road becomes gravel/dirt", "Construction zone starts", "Dead end ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/7/74/MUTCD_W8-3.svg" alt="Road sign">'},
+        // Warning signs - Soft shoulder
+        {q: "What does this sign mean?", o: ["Soft shoulder - do not drive on shoulder", "Sandy beach ahead", "Loose gravel", "Road surface changes"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/MUTCD_W8-4.svg" alt="Road sign">'},
+        // Warning signs - Roundabout
+        {q: "What does this sign mean?", o: ["Traffic circle/roundabout ahead", "U-turn allowed", "Curve ahead", "Loop ramp ahead"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/MUTCD_W2-6.svg" alt="Road sign">'},
+        // Warning signs - Added lane
+        {q: "What does this sign mean?", o: ["Two roads merge - entering traffic has its own lane", "Lane ends ahead", "Divided highway begins", "Passing zone ahead"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/8/89/MUTCD_W4-3R.svg" alt="Road sign">'},
+
+        // Regulatory signs - No left turn
+        {q: "What does this sign mean?", o: ["No left turn allowed", "Left turn only", "No U-turn", "One way - do not enter"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/MUTCD_R3-2.svg" alt="Road sign">'},
+        // Regulatory signs - No right turn
+        {q: "What does this sign mean?", o: ["Right turn only", "No right turn allowed", "Keep right", "Merge right"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/3/33/MUTCD_R3-1.svg" alt="Road sign">'},
+        // Regulatory signs - Keep right
+        {q: "What does this sign mean?", o: ["Right turn only", "Merge right", "Keep right of obstruction or divider", "One way to the right"], a: 2, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/3/31/MUTCD_R4-7.svg" alt="Road sign">'},
+        // Regulatory signs - Do not pass
+        {q: "What does this sign mean?", o: ["Do not pass other vehicles", "No entry", "Road closed", "No trucks allowed"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/6/63/MUTCD_R4-1.svg" alt="Road sign">'},
+        // Regulatory signs - Road closed
+        {q: "What does this sign mean?", o: ["Stop ahead", "Road closed - do not enter", "Dead end ahead", "Bridge out"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/MUTCD_R11-2.svg" alt="Road sign">'},
+        // Regulatory signs - Left turn only
+        {q: "What does this sign mean?", o: ["Left turn only from this lane", "No left turn", "U-turn allowed", "Curve to the left"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/MUTCD_R3-7L.svg" alt="Road sign">'},
+        // Regulatory signs - Right turn only
+        {q: "What does this sign mean?", o: ["No right turn", "Keep right", "Right turn only from this lane", "Merge right ahead"], a: 2, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/7/71/MUTCD_R3-7R.svg" alt="Road sign">'},
+        // Regulatory signs - No parking
+        {q: "What does this sign mean?", o: ["No standing", "No parking allowed", "No stopping", "Reserved parking"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/6/65/MUTCD_R8-3.svg" alt="Road sign">'},
+        // Regulatory signs - No trucks
+        {q: "What does this sign mean?", o: ["Truck route", "No trucks allowed", "Truck stop ahead", "Weigh station ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/6/69/MUTCD_R5-2.svg" alt="Road sign">'},
+        // Regulatory signs - Left lane must turn left
+        {q: "What does this sign mean?", o: ["Left lane must turn left", "No left turn", "Merge left", "Left turn yield on green"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/MUTCD_R3-7L.svg" alt="Road sign">'},
+        // Regulatory signs - Center lane left turn only
+        {q: "What does this sign mean?", o: ["Two-way left turn lane - center lane for left turns only", "No passing zone", "Keep right except to pass", "Lane ends ahead"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/MUTCD_R3-9b.svg" alt="Road sign">'},
+        // Regulatory signs - Slower traffic keep right
+        {q: "What does this sign mean?", o: ["Right lane exit only", "Slower traffic keep right", "Merge right", "Right turn ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/MUTCD_R4-3.svg" alt="Road sign">'},
+        // Regulatory signs - Pass with care
+        {q: "What does this sign mean?", o: ["Passing zone - pass with care", "No passing zone ends", "Caution - slow traffic", "Speed zone ahead"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/3/37/MUTCD_R4-2.svg" alt="Road sign">'},
+        // Regulatory signs - No pedestrians
+        {q: "What does this sign mean?", o: ["Pedestrian crossing ahead", "No pedestrians allowed", "School zone", "Hiking trail ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/MUTCD_R9-3.svg" alt="Road sign">'},
+        // Regulatory signs - No bicycles
+        {q: "What does this sign mean?", o: ["Bike route ahead", "Bike parking", "No bicycles allowed", "Share the road with bikes"], a: 2, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/MUTCD_R5-6.svg" alt="Road sign">'},
+
+        // Guide/Info signs - Hospital
+        {q: "What does this blue sign with an H indicate?", o: ["Heliport ahead", "Hospital ahead", "Hotel ahead", "Handicap parking"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/4/47/MUTCD_D9-13.svg" alt="Road sign">'},
+        // Guide/Info signs - Gas/Fuel
+        {q: "What does this blue sign with a gas pump indicate?", o: ["Gas/fuel available ahead", "No fuel for next 50 miles", "Diesel only station", "Electric vehicle charging"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/MUTCD_D9-7.svg" alt="Road sign">'},
+        // Guide/Info signs - Food
+        {q: "What does this blue sign with a fork and knife indicate?", o: ["Picnic area ahead", "Food/restaurant available ahead", "No eating zone", "Grocery store ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/1/17/MUTCD_D9-8.svg" alt="Road sign">'},
+        // Guide/Info signs - Lodging
+        {q: "What does this blue sign with a bed symbol indicate?", o: ["Rest area ahead", "Lodging/hotel available ahead", "Hospital ahead", "Campground ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/MUTCD_D9-9.svg" alt="Road sign">'},
+        // Guide/Info signs - Rest area
+        {q: "What does this blue sign indicate?", o: ["Parking area", "Rest area ahead", "Scenic overlook", "Picnic area"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/MUTCD_D5-1.svg" alt="Road sign">'},
+        // Guide/Info signs - Handicap parking
+        {q: "What does this sign indicate?", o: ["Hospital parking only", "Reserved parking for persons with disabilities", "No parking", "Loading zone"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/5/50/MUTCD_R7-8.svg" alt="Road sign">'},
+        // Guide/Info signs - Camping
+        {q: "What does this brown sign with a tent indicate?", o: ["Campground/camping available ahead", "Picnic area", "Scout camp - private", "Wilderness area - no vehicles"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/6/63/MUTCD_D9-3.svg" alt="Road sign">'},
+        // Guide/Info signs - Telephone
+        {q: "What does this blue sign with a telephone indicate?", o: ["Cell tower ahead", "Telephone available ahead", "Emergency call box", "No cell service area"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/MUTCD_D9-1.svg" alt="Road sign">'},
+        // Guide/Info signs - Airport
+        {q: "What does this sign with an airplane symbol indicate?", o: ["Low-flying aircraft area", "Airport ahead", "Military base - no entry", "Air ambulance landing zone"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/4/47/MUTCD_I-5.svg" alt="Road sign">'},
+
+        // Construction zone signs
+        {q: "What does this orange sign mean?", o: ["Detour - follow this route", "Road closed permanently", "Bridge out", "No entry"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/MUTCD_CM4-8.svg" alt="Road sign">'},
+        {q: "What does this orange sign with an arrow mean?", o: ["One lane road ahead", "Flagger/road worker ahead - be prepared to stop", "Construction vehicles entering", "Lane shift ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/0/05/MUTCD_CW20-7.svg" alt="Road sign">'},
+        {q: "What does this orange sign with 'ROAD WORK AHEAD' mean?", o: ["Road permanently closed", "Road work/construction ahead - drive with caution", "Detour required", "Road closed on weekends"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/MUTCD_CW20-1aP.svg" alt="Road sign">'},
+
+        // Pedestrian/Bike signs - Share the road
+        {q: "What does this sign mean?", o: ["Bicycles not allowed on road", "Share the road with bicycles", "Bike lane ahead", "Bike route ends"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/d/db/MUTCD_W11-1a.svg" alt="Road sign">'},
+        // Pedestrian/Bike signs - School crossing
+        {q: "What does this fluorescent yellow-green sign mean?", o: ["Playground ahead", "School crosswalk/crossing ahead", "Children at play", "Day care center ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/c/c0/MUTCD_S1-1a.svg" alt="Road sign">'},
+
+        // Lane control - Straight or left turn
+        {q: "What does this sign mean?", o: ["This lane may go straight or turn left", "Left turn only", "No left turn from this lane", "Merge left ahead"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/0/04/MUTCD_R3-6L.svg" alt="Road sign">'},
+
+        // Route markers
+        {q: "What does this US route marker shaped sign indicate?", o: ["State highway route", "US highway route marker", "County road marker", "Interstate route"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/5/50/US_blank.svg" alt="Road sign">'},
+        {q: "What shape is a Minnesota state highway route marker?", o: ["Shield shape", "Circle with number", "Rectangle", "Distinctive state outline shape"], a: 3, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/MN-blank.svg" alt="Road sign">'},
+
+        // Additional regulatory
+        {q: "What does this sign mean?", o: ["Right turn permitted on red after stop", "No turn on red", "Red light ahead", "Stop - then proceed on red"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/MUTCD_R10-11.svg" alt="Road sign">'},
+        {q: "What does this sign mean?", o: ["Begin right turn lane", "Right lane ends ahead", "Merge right", "Exit only"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/4/40/MUTCD_R3-7R.svg" alt="Road sign">'},
+
+        // Chevron alignment sign
+        {q: "What do these yellow chevron arrows indicate?", o: ["Sharp change in direction of road - follow the arrows", "Two-way traffic", "Road splits ahead", "Merge ahead"], a: 0, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/6/60/MUTCD_W1-8R.svg" alt="Road sign">'},
+
+        // Object marker
+        {q: "What do yellow and black diagonal stripes on a sign or object indicate?", o: ["Construction zone boundary", "Road obstruction - keep to the side indicated", "Railroad crossing", "Bridge abutment ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/2/25/MUTCD_OM3-R.svg" alt="Road sign">'},
+
+        // Dead end
+        {q: "What does this sign mean?", o: ["Road closed", "Dead end/no outlet ahead", "No through traffic", "Private road"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/3/33/MUTCD_W14-1.svg" alt="Road sign">'},
+
+        // Flood area
+        {q: "What does this sign mean?", o: ["Bridge ahead", "Road may flood - do not cross when flooded", "Water on road", "Dam ahead"], a: 1, img: '<img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/MUTCD_W8-18.svg" alt="Road sign">'}
     ];
 
     var allPool = allQuestions.concat(signQuestions);
