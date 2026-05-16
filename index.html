@@ -348,6 +348,21 @@
         .key-facts li strong {
             color: #764ba2;
         }
+        .sign-image {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .sign-image svg {
+            width: 120px;
+            height: 120px;
+        }
+        .flashcard-front .sign-image {
+            margin-bottom: 12px;
+        }
+        .flashcard-front .sign-image svg {
+            width: 100px;
+            height: 100px;
+        }
         @media (max-width: 600px) {
             body { padding: 10px; }
             .header h1 { font-size: 1.4em; }
@@ -356,6 +371,7 @@
             .stat-number { font-size: 1.2em; }
             .mode-btn { padding: 10px 18px; font-size: 0.85em; }
             .nav-btn { padding: 10px 20px; }
+            .sign-image svg { width: 100px; height: 100px; }
         }
     </style>
 </head>
@@ -369,6 +385,7 @@
         <div class="mode-buttons">
             <button class="mode-btn active" onclick="setMode('quiz', this)">Quiz Mode</button>
             <button class="mode-btn" onclick="setMode('flashcard', this)">Flashcard Mode</button>
+            <button class="mode-btn" onclick="setMode('signs', this)">Road Signs</button>
             <button class="mode-btn" onclick="setMode('facts', this)">Key Facts</button>
         </div>
 
@@ -630,6 +647,30 @@
         {q: "The 'No Zone' refers to:", o: ["School zones where parking is prohibited", "Blind spots around large trucks where your vehicle may not be visible", "Construction zones", "Areas where U-turns are prohibited"], a: 1}
     ];
 
+    var signQuestions = [
+        {q: "What does this sign mean?", o: ["Stop and wait for green light", "Stop completely before proceeding", "Slow down and proceed with caution", "Yield to oncoming traffic"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 79,15 93,44 93,56 79,85 50,98 21,85 7,56 7,44 21,15" fill="#CC0000" stroke="#FFF" stroke-width="3"/><text x="50" y="58" text-anchor="middle" fill="white" font-size="20" font-weight="bold" font-family="Arial">STOP</text></svg>'},
+        {q: "What does this sign mean?", o: ["Stop completely", "Slow down and yield the right-of-way", "Merge ahead", "No entry"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,8 95,92 5,92" fill="white" stroke="#CC0000" stroke-width="6"/><text x="50" y="72" text-anchor="middle" fill="#CC0000" font-size="14" font-weight="bold" font-family="Arial">YIELD</text></svg>'},
+        {q: "What does this pennant-shaped sign indicate?", o: ["School zone ahead", "No passing zone", "Construction zone", "Railroad crossing"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="5,50 95,20 95,80" fill="#FFD700" stroke="black" stroke-width="2"/><text x="55" y="47" text-anchor="middle" fill="black" font-size="10" font-weight="bold" font-family="Arial">NO</text><text x="55" y="60" text-anchor="middle" fill="black" font-size="9" font-weight="bold" font-family="Arial">PASSING</text><text x="55" y="72" text-anchor="middle" fill="black" font-size="9" font-weight="bold" font-family="Arial">ZONE</text></svg>'},
+        {q: "What does this round yellow sign indicate?", o: ["Rest area ahead", "Railroad crossing ahead", "Roundabout ahead", "Hospital ahead"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="44" fill="#FFD700" stroke="black" stroke-width="3"/><line x1="25" y1="25" x2="75" y2="75" stroke="black" stroke-width="5"/><line x1="75" y1="25" x2="25" y2="75" stroke="black" stroke-width="5"/><text x="30" y="47" fill="black" font-size="16" font-weight="bold" font-family="Arial">R</text><text x="63" y="47" fill="black" font-size="16" font-weight="bold" font-family="Arial">R</text></svg>'},
+        {q: "What does this pentagon-shaped sign indicate?", o: ["Construction zone", "Hospital ahead", "School zone", "Park area"], a: 2, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,5 95,38 82,92 18,92 5,38" fill="#FFD700" stroke="black" stroke-width="3"/><text x="50" y="50" text-anchor="middle" fill="black" font-size="10" font-weight="bold" font-family="Arial">SCHOOL</text><text x="50" y="65" text-anchor="middle" fill="black" font-size="10" font-weight="bold" font-family="Arial">ZONE</text></svg>'},
+        {q: "What does this orange diamond sign mean?", o: ["Warning - curve ahead", "Construction or work zone ahead", "Detour required", "Road closed"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,5 95,50 50,95 5,50" fill="#FF8C00" stroke="black" stroke-width="3"/><text x="50" y="45" text-anchor="middle" fill="black" font-size="9" font-weight="bold" font-family="Arial">WORK</text><text x="50" y="58" text-anchor="middle" fill="black" font-size="9" font-weight="bold" font-family="Arial">ZONE</text><text x="50" y="71" text-anchor="middle" fill="black" font-size="9" font-weight="bold" font-family="Arial">AHEAD</text></svg>'},
+        {q: "What does this sign mean?", o: ["Maximum speed allowed", "Minimum speed required", "Suggested speed in bad weather", "Speed for trucks only"], a: 0, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="5" width="80" height="90" rx="3" fill="white" stroke="black" stroke-width="3"/><text x="50" y="25" text-anchor="middle" fill="black" font-size="10" font-weight="bold" font-family="Arial">SPEED</text><text x="50" y="37" text-anchor="middle" fill="black" font-size="10" font-weight="bold" font-family="Arial">LIMIT</text><text x="50" y="72" text-anchor="middle" fill="black" font-size="34" font-weight="bold" font-family="Arial">55</text></svg>'},
+        {q: "What does this sign indicate?", o: ["Merge right", "Traffic flows in one direction only", "Right turn only", "Keep right"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="30" width="90" height="40" rx="3" fill="black" stroke="white" stroke-width="2"/><text x="35" y="57" text-anchor="middle" fill="white" font-size="12" font-weight="bold" font-family="Arial">ONE WAY</text><polygon points="75,50 65,38 65,62" fill="white"/><rect x="67" y="47" width="15" height="6" fill="white"/></svg>'},
+        {q: "What does this sign mean?", o: ["No U-turn", "Do not enter this road", "Stop ahead", "No parking"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="44" fill="#CC0000" stroke="white" stroke-width="3"/><rect x="20" y="44" width="60" height="12" fill="white"/></svg>'},
+        {q: "What does this sign mean?", o: ["Do not enter", "You are going the wrong way", "Road closed ahead", "Stop - dead end"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="25" width="84" height="50" rx="3" fill="#CC0000" stroke="white" stroke-width="3"/><text x="50" y="47" text-anchor="middle" fill="white" font-size="12" font-weight="bold" font-family="Arial">WRONG</text><text x="50" y="63" text-anchor="middle" fill="white" font-size="12" font-weight="bold" font-family="Arial">WAY</text></svg>'},
+        {q: "What does this sign mean?", o: ["U-turns allowed with caution", "No U-turn allowed", "Curve ahead", "Turnaround ahead"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="84" height="84" rx="3" fill="white" stroke="black" stroke-width="3"/><circle cx="50" cy="50" r="34" fill="none" stroke="#CC0000" stroke-width="4"/><line x1="26" y1="26" x2="74" y2="74" stroke="#CC0000" stroke-width="4"/><path d="M 38,60 L 38,40 A 12,12 0 0 1 62,40 L 62,50" fill="none" stroke="black" stroke-width="4"/><polygon points="62,55 57,45 67,45" fill="black"/></svg>'},
+        {q: "What does this yellow diamond sign with arrows merging indicate?", o: ["Road narrows", "Traffic merging from the right", "Divided highway ends", "Two-way traffic ahead"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,5 95,50 50,95 5,50" fill="#FFD700" stroke="black" stroke-width="3"/><line x1="50" y1="25" x2="50" y2="75" stroke="black" stroke-width="4"/><line x1="68" y1="35" x2="53" y2="55" stroke="black" stroke-width="4"/><polygon points="50,75 45,65 55,65" fill="black"/></svg>'},
+        {q: "What does this yellow diamond sign with a curved arrow indicate?", o: ["Winding road ahead", "Curve ahead - reduce speed", "Detour ahead", "Roundabout ahead"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,5 95,50 50,95 5,50" fill="#FFD700" stroke="black" stroke-width="3"/><path d="M 40,72 L 40,45 Q 40,30 55,30 L 65,30" fill="none" stroke="black" stroke-width="5"/><polygon points="67,30 57,23 57,37" fill="black"/></svg>'},
+        {q: "What does this yellow diamond sign with a deer silhouette indicate?", o: ["Hunting area ahead", "Zoo ahead", "Deer crossing area - watch for animals", "Animal shelter nearby"], a: 2, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,5 95,50 50,95 5,50" fill="#FFD700" stroke="black" stroke-width="3"/><path d="M 55,35 L 57,28 M 55,35 L 60,29 M 55,35 L 55,45 L 50,55 L 45,70 M 55,45 L 60,55 L 65,70 M 55,45 L 40,50 L 35,60 M 50,55 L 60,55" fill="none" stroke="black" stroke-width="3" stroke-linecap="round"/></svg>'},
+        {q: "What does this yellow diamond sign with a walking figure indicate?", o: ["Hiking trail ahead", "Pedestrian crossing ahead", "School zone", "Park entrance"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,5 95,50 50,95 5,50" fill="#FFD700" stroke="black" stroke-width="3"/><circle cx="50" cy="30" r="5" fill="black"/><line x1="50" y1="35" x2="50" y2="55" stroke="black" stroke-width="4"/><line x1="50" y1="55" x2="40" y2="72" stroke="black" stroke-width="3"/><line x1="50" y1="55" x2="60" y2="72" stroke="black" stroke-width="3"/><line x1="50" y1="40" x2="38" y2="50" stroke="black" stroke-width="3"/><line x1="50" y1="40" x2="62" y2="50" stroke="black" stroke-width="3"/></svg>'},
+        {q: "What does this white X-shaped sign at a railroad crossing mean?", o: ["Crossroads ahead", "You are at a railroad crossing - look for trains", "Hospital ahead", "No crossing allowed"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="15" y="44" width="70" height="12" rx="2" fill="white" stroke="black" stroke-width="2" transform="rotate(-45 50 50)"/><rect x="15" y="44" width="70" height="12" rx="2" fill="white" stroke="black" stroke-width="2" transform="rotate(45 50 50)"/><text x="50" y="37" text-anchor="middle" fill="black" font-size="6" font-weight="bold" font-family="Arial">RAIL</text><text x="50" y="70" text-anchor="middle" fill="black" font-size="6" font-weight="bold" font-family="Arial">ROAD</text><text x="30" y="54" text-anchor="middle" fill="black" font-size="6" font-weight="bold" font-family="Arial">CROS</text><text x="70" y="54" text-anchor="middle" fill="black" font-size="6" font-weight="bold" font-family="Arial">SING</text></svg>'},
+        {q: "What does this yellow diamond sign with a divided highway symbol indicate?", o: ["Merge ahead", "Divided highway begins ahead", "Two-way traffic", "Lane ends"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,5 95,50 50,95 5,50" fill="#FFD700" stroke="black" stroke-width="3"/><rect x="47" y="30" width="6" height="40" fill="black"/><path d="M 50,30 L 38,55 L 38,70" fill="none" stroke="black" stroke-width="4"/><path d="M 50,30 L 62,55 L 62,70" fill="none" stroke="black" stroke-width="4"/><polygon points="50,25 45,35 55,35" fill="black"/></svg>'},
+        {q: "What does this yellow diamond sign with a skidding car indicate?", o: ["Car wash ahead", "Slippery when wet - reduce speed", "Ice on road - stop", "Winding road ahead"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,5 95,50 50,95 5,50" fill="#FFD700" stroke="black" stroke-width="3"/><path d="M 35,65 Q 42,45 50,55 Q 58,65 65,35" fill="none" stroke="black" stroke-width="4"/><rect x="55" y="30" width="15" height="8" rx="2" fill="black" transform="rotate(-20 62 34)"/></svg>'},
+        {q: "What does this yellow diamond sign with a small stop sign symbol indicate?", o: ["Stop sign ahead - prepare to stop", "Stop sign removed", "Intersection ahead", "Traffic signal ahead"], a: 0, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,5 95,50 50,95 5,50" fill="#FFD700" stroke="black" stroke-width="3"/><rect x="47" y="50" width="6" height="20" fill="black"/><polygon points="50,28 61,33 61,43 50,48 39,43 39,33" fill="#CC0000" stroke="black" stroke-width="1"/><text x="50" y="42" text-anchor="middle" fill="white" font-size="7" font-weight="bold" font-family="Arial">STOP</text></svg>'},
+        {q: "What does this shield-shaped sign indicate?", o: ["Military zone", "Interstate highway route marker", "National park", "Hospital direction"], a: 1, img: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 20,20 L 80,20 L 80,55 Q 80,80 50,92 Q 20,80 20,55 Z" fill="#003399" stroke="white" stroke-width="3"/><path d="M 30,20 L 50,8 L 70,20" fill="#CC0000" stroke="white" stroke-width="2"/><text x="50" y="40" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="Arial">INTERSTATE</text><text x="50" y="68" text-anchor="middle" fill="white" font-size="26" font-weight="bold" font-family="Arial">94</text></svg>'}
+    ];
+
+    var allPool = allQuestions.concat(signQuestions);
     var currentSet = [];
     var currentIndex = 0;
     var correctCount = 0;
@@ -637,6 +678,7 @@
     var answered = false;
     var currentMode = 'quiz';
     var cardFlipped = false;
+    var currentSetSize = 40;
 
     function shuffle(array) {
         var arr = array.slice();
@@ -650,14 +692,20 @@
     }
 
     function newSet() {
-        currentSet = shuffle(allQuestions).slice(0, 40);
+        if (currentMode === 'signs') {
+            currentSet = shuffle(signQuestions);
+            currentSetSize = signQuestions.length;
+        } else {
+            currentSet = shuffle(allPool).slice(0, 40);
+            currentSetSize = 40;
+        }
         currentIndex = 0;
         correctCount = 0;
         incorrectCount = 0;
         answered = false;
         cardFlipped = false;
 
-        if (currentMode === 'quiz') {
+        if (currentMode === 'quiz' || currentMode === 'signs') {
             renderQuestion();
             updateStats();
         } else if (currentMode === 'flashcard') {
@@ -670,17 +718,17 @@
         document.querySelectorAll('.mode-btn').forEach(function(b) { b.classList.remove('active'); });
         if (btn) { btn.classList.add('active'); }
 
-        document.getElementById('quiz-section').style.display = mode === 'quiz' ? 'block' : 'none';
+        document.getElementById('quiz-section').style.display = (mode === 'quiz' || mode === 'signs') ? 'block' : 'none';
         document.getElementById('flashcard-section').style.display = mode === 'flashcard' ? 'block' : 'none';
         document.getElementById('facts-section').style.display = mode === 'facts' ? 'block' : 'none';
 
-        if (mode === 'quiz' || mode === 'flashcard') {
+        if (mode === 'quiz' || mode === 'flashcard' || mode === 'signs') {
             newSet();
         }
     }
 
     function renderQuestion() {
-        if (currentIndex >= 40) {
+        if (currentIndex >= currentSetSize) {
             showResults();
             return;
         }
@@ -689,8 +737,14 @@
         var container = document.getElementById('question-container');
         var letters = ['A', 'B', 'C', 'D'];
 
+        var imageHtml = '';
+        if (q.img) {
+            imageHtml = '<div class="sign-image">' + q.img + '</div>';
+        }
+
         var html = '<div class="question-card">' +
-            '<div class="question-number">Question ' + (currentIndex + 1) + ' of 40</div>' +
+            '<div class="question-number">Question ' + (currentIndex + 1) + ' of ' + currentSetSize + '</div>' +
+            imageHtml +
             '<div class="question-text">' + q.q + '</div>' +
             '<div class="options">';
 
@@ -740,7 +794,7 @@
 
     function nextQuestion() {
         currentIndex++;
-        if (currentIndex >= 40) {
+        if (currentIndex >= currentSetSize) {
             showResults();
         } else {
             renderQuestion();
@@ -749,24 +803,26 @@
     }
 
     function updateStats() {
-        document.getElementById('current-q').textContent = Math.min(currentIndex + 1, 40);
+        document.getElementById('current-q').textContent = Math.min(currentIndex + 1, currentSetSize);
+        document.getElementById('total-q').textContent = '/ ' + currentSetSize;
         document.getElementById('correct-count').textContent = correctCount;
         document.getElementById('incorrect-count').textContent = incorrectCount;
-        const progress = ((currentIndex) / 40) * 100;
+        var progress = ((currentIndex) / currentSetSize) * 100;
         document.getElementById('progress-fill').style.width = progress + '%';
     }
 
     function showResults() {
         var container = document.getElementById('question-container');
-        var percentage = Math.round((correctCount / 40) * 100);
-        var passed = correctCount >= 32;
+        var percentage = Math.round((correctCount / currentSetSize) * 100);
+        var passThreshold = Math.ceil(currentSetSize * 0.8);
+        var passed = correctCount >= passThreshold;
 
         container.innerHTML = '<div class="results-card">' +
             '<h2>' + (passed ? 'Congratulations!' : 'Keep Practicing!') + '</h2>' +
-            '<div class="score ' + (passed ? 'pass' : 'fail') + '">' + correctCount + '/40</div>' +
+            '<div class="score ' + (passed ? 'pass' : 'fail') + '">' + correctCount + '/' + currentSetSize + '</div>' +
             '<div class="message">' +
             'You got ' + percentage + '% correct.<br>' +
-            (passed ? 'You passed! (Need 80% / 32 correct)' : 'You need 32 correct (80%) to pass. You were ' + (32 - correctCount) + ' away.') +
+            (passed ? 'You passed! (Need 80% / ' + passThreshold + ' correct)' : 'You need ' + passThreshold + ' correct (80%) to pass. You were ' + (passThreshold - correctCount) + ' away.') +
             '</div>' +
             '<button class="nav-btn next" onclick="newSet()" style="display:inline-block; margin:0 auto;">' +
             'Try New Set</button>' +
@@ -776,15 +832,21 @@
 
     // Flashcard functions
     function renderFlashcard() {
-        if (currentIndex >= 40) {
+        if (currentIndex >= currentSetSize) {
             currentIndex = 0;
-            currentSet = shuffle(allQuestions).slice(0, 40);
+            currentSet = shuffle(allPool).slice(0, 40);
+            currentSetSize = 40;
         }
 
         var q = currentSet[currentIndex];
-        document.getElementById('card-question').textContent = q.q;
+        var frontEl = document.getElementById('card-question');
+        if (q.img) {
+            frontEl.innerHTML = '<div class="sign-image">' + q.img + '</div>' + q.q;
+        } else {
+            frontEl.textContent = q.q;
+        }
         document.getElementById('card-answer').textContent = q.o[q.a];
-        document.getElementById('card-counter').textContent = 'Card ' + (currentIndex + 1) + ' of 40';
+        document.getElementById('card-counter').textContent = 'Card ' + (currentIndex + 1) + ' of ' + currentSetSize;
         document.getElementById('flashcard').classList.remove('flipped');
         cardFlipped = false;
     }
@@ -797,9 +859,10 @@
 
     function nextCard() {
         currentIndex++;
-        if (currentIndex >= 40) {
+        if (currentIndex >= currentSetSize) {
             currentIndex = 0;
-            currentSet = shuffle(allQuestions).slice(0, 40);
+            currentSet = shuffle(allPool).slice(0, 40);
+            currentSetSize = 40;
         }
         renderFlashcard();
     }
